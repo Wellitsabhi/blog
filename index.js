@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const PORT = 8000;
@@ -11,18 +12,23 @@ mongoose.connect('mongodb://127.0.0.1:27017/blogger')
 
 // Routes
 const userRoute = require('./routes/user.routes.js');
+const { checkForAuthenticationCookie } = require('./middlewares/auth.middlewares.js');
 
 // ejs
 app.set('view engine', 'ejs')
 app.set('views', path.resolve('./views'))
 
-// middleare to handle form data
-app.use(express.urlencoded({ extended: false}))
+// middleware 
+app.use(express.urlencoded({ extended: false})) //to handle form data
+app.use(cookieParser())  // to parse cookie
+app.use(checkForAuthenticationCookie('token'))
 
 app.get('/', (req, res) => {
-    res.render("home")
+    res.render('home',{
+        user: req.user,
+    })
+    // console.log(req.user);
 })
-
 // Middleware
 app.use("/user", userRoute);
 
