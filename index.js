@@ -12,6 +12,7 @@ const PORT = 8000;
 mongoose.connect('mongodb://127.0.0.1:27017/blogger')
 .then( console.log('MongoDB Connected'))
 
+
 // Routes
 const userRoute = require('./routes/user.routes.js');
 const blogRoute = require('./routes/blog.routes.js');
